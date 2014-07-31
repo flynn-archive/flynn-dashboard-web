@@ -5,7 +5,7 @@
 "use strict";
 
 FlynnDashboard.Views.Input = React.createClass({
-	displayName: "FlynnDashboard.Views.Input",
+	displayName: "Views.Input",
 
 	getInitialState: function () {
 		return {

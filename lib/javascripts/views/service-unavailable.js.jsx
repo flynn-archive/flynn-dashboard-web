@@ -5,7 +5,7 @@
 "use strict";
 
 FlynnDashboard.Views.ServiceUnavailable = React.createClass({
-	displayName: "FlynnDashboard.Views.ServiceUnavailable",
+	displayName: "Views.ServiceUnavailable",
 
 	render: function () {
 		return (

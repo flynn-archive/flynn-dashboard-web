@@ -10,7 +10,7 @@ var Input = FlynnDashboard.Views.Input;
 var LoginModel = FlynnDashboard.Views.Models.Login;
 
 FlynnDashboard.Views.Login = React.createClass({
-	displayName: "FlynnDashboard.Views.Login",
+	displayName: "Views.Login",
 
 	componentDidMount: function () {
 		LoginModel.addChangeListener(this.__handleLoginModelChange);
