@@ -17,12 +17,15 @@ FlynnDashboard.Views.Github = React.createClass({
 				</header>
 
 				<section className="panel">
-					<FlynnDashboard.Views.GithubSources selectedSource={this.props.selectedSource} />
+					<FlynnDashboard.Views.GithubSources
+						selectedSource={this.props.selectedSource} />
 				</section>
 
 				<section className="panel-row">
 					<section className="github-repos-panel">
-						<FlynnDashboard.Views.GithubRepos />
+						<FlynnDashboard.Views.GithubRepos
+							selectedSource={this.props.selectedSource}
+							selectedType={this.props.selectedType} />
 					</section>
 
 					<section className="panel">

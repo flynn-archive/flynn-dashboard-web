@@ -33,13 +33,13 @@ FlynnDashboard.Views.GithubSources = React.createClass({
 			<ul className="github-sources">
 				{this.state.user ? (
 					<li className={this.props.selectedSource === null ? "selected" : null}>
-						<Source path={getPath([{ org: null }])} source={this.state.user} />
+						<Source path={getPath([{ org: null, type: null }])} source={this.state.user} />
 					</li>
 				) : null}
 				{this.state.orgs.map(function (org) {
 					return (
 						<li key={org.id} className={this.props.selectedSource === org.login ? "selected" : null}>
-							<Source path={getPath([{ org: org.login }])} source={org} />
+							<Source path={getPath([{ org: org.login, type: null }])} source={org} />
 						</li>
 					);
 				}, this)}
