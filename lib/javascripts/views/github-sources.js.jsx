@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 //= require ../stores/github-user
 //= require ../stores/github-orgs
+//= require ./helpers/getPath
 //= require ./route-link
 
 (function () {
@@ -12,6 +13,8 @@ var GithubOrgsStore = FlynnDashboard.Stores.GithubOrgs;
 
 var orgsStoreId = "default";
 var userStoreId = "default";
+
+var getPath = FlynnDashboard.Views.Helpers.getPath;
 
 function getState() {
 	var state = {};
@@ -30,13 +33,13 @@ FlynnDashboard.Views.GithubSources = React.createClass({
 			<ul className="github-sources">
 				{this.state.user ? (
 					<li className={this.props.selectedSource === null ? "selected" : null}>
-						<Source path={this.__getPath([{ org: null }])} source={this.state.user} />
+						<Source path={getPath([{ org: null }])} source={this.state.user} />
 					</li>
 				) : null}
 				{this.state.orgs.map(function (org) {
 					return (
 						<li key={org.id} className={this.props.selectedSource === org.login ? "selected" : null}>
-							<Source path={this.__getPath([{ org: org.login }])} source={org} />
+							<Source path={getPath([{ org: org.login }])} source={org} />
 						</li>
 					);
 				}, this)}
@@ -60,14 +63,6 @@ FlynnDashboard.Views.GithubSources = React.createClass({
 	componentWillUnmount: function () {
 		GithubUserStore.removeChangeListener(userStoreId, this.__handleStoreChange);
 		GithubOrgsStore.removeChangeListener(orgsStoreId, this.__handleStoreChange);
-	},
-
-	__getPath: function (params) {
-		var path = Marbles.history.path;
-		var pathParams = Marbles.QueryParams.deserializeParams(path.split("?")[1] || "");
-		params = Marbles.QueryParams.replaceParams.apply(null, [pathParams].concat(params));
-		path = Marbles.history.pathWithParams(path.split("?")[0], params);
-		return path;
 	},
 
 	__handleStoreChange: function () {

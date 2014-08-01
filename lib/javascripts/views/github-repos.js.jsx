@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 //= require ../stores/github-repos
+//= require ./helpers/getPath
 //= require ./route-link
 
 (function () {
@@ -7,6 +8,8 @@
 "use strict";
 
 var GithubReposStore = FlynnDashboard.Stores.GithubRepos;
+
+var getPath = FlynnDashboard.Views.Helpers.getPath;
 
 function getState() {
 	var state = {};
@@ -27,7 +30,7 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 				{this.state.repos.map(function (repo) {
 					return (
 						<li key={repo.id}>
-							<FlynnDashboard.Views.RouteLink path={this.__getPath([{ repo: repo.name, owner: repo.ownerLogin }])}>
+							<FlynnDashboard.Views.RouteLink path={getPath([{ repo: repo.name, owner: repo.ownerLogin }])}>
 								<h2>
 									{repo.name} <small>{repo.language}</small>
 								</h2>
@@ -54,14 +57,6 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 
 	componentWillUnmount: function () {
 		GithubReposStore.removeChangeListener(this.state.reposStoreId, this.__handleStoreChange);
-	},
-
-	__getPath: function (params) {
-		var path = Marbles.history.path;
-		var pathParams = Marbles.QueryParams.deserializeParams(path.split("?")[1] || "");
-		params = Marbles.QueryParams.replaceParams.apply(null, [pathParams].concat(params));
-		path = Marbles.history.pathWithParams(path.split("?")[0], params);
-		return path;
 	},
 
 	__handleStoreChange: function () {
