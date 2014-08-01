@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 //= require ./github-sources
+//= require ./github-repos
 
 (function () {
 
@@ -17,6 +18,16 @@ FlynnDashboard.Views.Github = React.createClass({
 
 				<section className="panel">
 					<FlynnDashboard.Views.GithubSources selectedSource={this.props.selectedSource} />
+				</section>
+
+				<section className="panel-row">
+					<section className="github-repos-panel">
+						<FlynnDashboard.Views.GithubRepos />
+					</section>
+
+					<section className="panel">
+						<span className="placeholder">Select a repo on the left to get started</span>
+					</section>
 				</section>
 			</section>
 		);
