@@ -107,7 +107,7 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 	componentWillReceiveProps: function (props) {
 		var oldRepoStoreId = this.state.reposStoreId;
 		var newRepoStoreId = getRepoStoreId(props);
-		if (oldRepoStoreId !== newRepoStoreId) {
+		if (JSON.stringify(oldRepoStoreId) !== JSON.stringify(newRepoStoreId)) {
 			GithubReposStore.removeChangeListener(oldRepoStoreId, this.__handleStoreChange);
 			GithubReposStore.addChangeListener(newRepoStoreId, this.__handleStoreChange);
 		}
