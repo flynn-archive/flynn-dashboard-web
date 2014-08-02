@@ -1,15 +1,21 @@
 /** @jsx React.DOM */
 //= require ../stores/github-user
 //= require ../stores/github-repos
+//= require ../actions/github-repos
 //= require ./helpers/getPath
 //= require ./route-link
+//= require ScrollPagination
 
 (function () {
 
 "use strict";
 
+var ScrollPagination = window.ScrollPagination;
+
 var GithubUserStore = FlynnDashboard.Stores.GithubUser;
 var GithubReposStore = FlynnDashboard.Stores.GithubRepos;
+
+var GithubReposActions = FlynnDashboard.Actions.GithubRepos;
 
 var userStoreId = "default";
 
@@ -27,7 +33,10 @@ function getState(props) {
 
 	state.reposStoreId = getRepoStoreId(props);
 
-	state.repos = GithubReposStore.getState(state.reposStoreId).repos;
+	var reposState = GithubReposStore.getState(state.reposStoreId);
+	state.reposPages = reposState.pages;
+	state.reposHasPrevPage = !!reposState.prevPageParams;
+	state.reposHasNextPage = !!reposState.nextPageParams;
 
 	return state;
 }
@@ -44,25 +53,46 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 	displayName: "Views.GithubRepos",
 
 	render: function () {
-		return (
-			<ul className="github-repos">
-				<li className="github-repo-types">
-					<Types selectedType={this.props.selectedType} selectedSource={this.props.selectedSource} />
-				</li>
+		var handlePageEvent = this.__handlePageEvent;
 
-				{this.state.repos.map(function (repo) {
-					return (
-						<li key={repo.id}>
-							<FlynnDashboard.Views.RouteLink path={getPath([{ repo: repo.name, owner: repo.ownerLogin }])}>
-								<h2>
-									{repo.name} <small>{repo.language}</small>
-								</h2>
-								<p>{repo.description}</p>
-							</FlynnDashboard.Views.RouteLink>
-						</li>
-					);
-				}, this)}
-			</ul>
+		return (
+			<div>
+				<Types selectedType={this.props.selectedType} selectedSource={this.props.selectedSource} />
+
+				<ScrollPagination
+					ref="scrollPagination"
+					hasPrevPage={this.state.reposHasPrevPage}
+					hasNextPage={this.state.reposHasNextPage}
+					unloadPage={GithubReposActions.unloadPageId.bind(null, this.state.reposStoreId)}
+					loadPrevPage={GithubReposActions.fetchPrevPage.bind(null, this.state.reposStoreId)}
+					loadNextPage={GithubReposActions.fetchNextPage.bind(null, this.state.reposStoreId)}>
+
+					{this.state.reposPages.map(function (page) {
+						return (
+							<ScrollPagination.Page
+								key={page.id}
+								id={page.id}
+								className="github-repos"
+								onPageEvent={handlePageEvent}
+								component={React.DOM.ul}>
+
+								{page.repos.map(function (repo) {
+									return (
+										<li key={repo.id}>
+											<FlynnDashboard.Views.RouteLink path={getPath([{ repo: repo.name, owner: repo.ownerLogin }])}>
+												<h2>
+													{repo.name} <small>{repo.language}</small>
+												</h2>
+												<p>{repo.description}</p>
+											</FlynnDashboard.Views.RouteLink>
+										</li>
+									);
+								}, this)}
+							</ScrollPagination.Page>
+						);
+					}, this)}
+				</ScrollPagination>
+			</div>
 		);
 	},
 
@@ -90,6 +120,10 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 
 	__handleStoreChange: function () {
 		this.setState(getState(this.props));
+	},
+
+	__handlePageEvent: function (pageId, event) {
+		this.refs.scrollPagination.handlePageEvent(pageId, event);
 	}
 });
 
@@ -99,27 +133,29 @@ var Types = React.createClass({
 	render: function () {
 		var user = this.state.user;
 		return (
-			<ul>
-				<li className={this.props.selectedType === null ? "selected" : null}>
-					<FlynnDashboard.Views.RouteLink path={getPath([{ type: null }])}>
-						{this.props.selectedSource || (user ? user.login : "")}
-					</FlynnDashboard.Views.RouteLink>
-				</li>
-
-				{this.props.selectedSource ? null : (
-					<li className={this.props.selectedType === "star" ? "selected" : null}>
-						<FlynnDashboard.Views.RouteLink path={getPath([{ type: "star" }])}>
-							starred
+			<section className="github-repo-types">
+				<ul>
+					<li className={this.props.selectedType === null ? "selected" : null}>
+						<FlynnDashboard.Views.RouteLink path={getPath([{ type: null }])}>
+							{this.props.selectedSource || (user ? user.login : "")}
 						</FlynnDashboard.Views.RouteLink>
 					</li>
-				)}
 
-				<li className={this.props.selectedType === "fork" ? "selected" : null}>
-					<FlynnDashboard.Views.RouteLink path={getPath([{ type: "fork" }])}>
-						forked
-					</FlynnDashboard.Views.RouteLink>
-				</li>
-			</ul>
+					{this.props.selectedSource ? null : (
+						<li className={this.props.selectedType === "star" ? "selected" : null}>
+							<FlynnDashboard.Views.RouteLink path={getPath([{ type: "star" }])}>
+								starred
+							</FlynnDashboard.Views.RouteLink>
+						</li>
+					)}
+
+					<li className={this.props.selectedType === "fork" ? "selected" : null}>
+						<FlynnDashboard.Views.RouteLink path={getPath([{ type: "fork" }])}>
+							forked
+						</FlynnDashboard.Views.RouteLink>
+					</li>
+				</ul>
+			</section>
 		);
 	},
 

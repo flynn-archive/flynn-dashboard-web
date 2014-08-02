@@ -273,6 +273,14 @@ input[type="text"], input[type="email"], input[type="password"] {
   flex-basis: 275px;
 }
 
+%github-repos-anchor {
+  color: $blackGrayColor;
+  display: block;
+  padding: 0.5rem 2rem;
+  outline: none;
+  text-decoration: none;
+}
+
 .github-repos {
   list-style: none;
   margin: 0;
@@ -284,7 +292,7 @@ input[type="text"], input[type="email"], input[type="password"] {
       background-color: darken($whiteColor, 1%);
     }
 
-    &:not(.github-repo-types):hover {
+    &:hover {
       background-color: darken($whiteColor, 6%);
     }
 
@@ -300,16 +308,13 @@ input[type="text"], input[type="email"], input[type="password"] {
     }
 
     a {
-      color: $blackGrayColor;
-      display: block;
-      padding: 0.5rem 2rem;
-      outline: none;
-      text-decoration: none;
+      @extend %github-repos-anchor;
     }
   }
 }
 
 .github-repo-types {
+  border-bottom: 1px solid $grayBlueColor;
   > ul {
     list-style: none;
     margin: 0;
@@ -321,8 +326,8 @@ input[type="text"], input[type="email"], input[type="password"] {
       margin-right: 1em;
 
       a {
+        @extend %github-repos-anchor;
         padding: 0.5em 0.25em;
-        outline: none;
       }
 
       &:last-of-type {
