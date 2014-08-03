@@ -107,7 +107,7 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 	componentWillReceiveProps: function (props) {
 		var oldRepoStoreId = this.state.reposStoreId;
 		var newRepoStoreId = getRepoStoreId(props);
-		if (JSON.stringify(oldRepoStoreId) !== JSON.stringify(newRepoStoreId)) {
+		if ( !Marbles.Utils.assertEqual(oldRepoStoreId, newRepoStoreId) ) {
 			GithubReposStore.removeChangeListener(oldRepoStoreId, this.__handleStoreChange);
 			GithubReposStore.addChangeListener(newRepoStoreId, this.__handleStoreChange);
 		}
