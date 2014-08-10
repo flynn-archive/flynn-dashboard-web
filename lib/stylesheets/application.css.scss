@@ -47,6 +47,14 @@ html, body {
   }
 }
 
+%placeholder {
+  display: block;
+  text-align: center;
+  margin: 2rem;
+  font-size: 2rem;
+  color: $darkerGrayBlueColor;
+}
+
 .float-right {
   float: right;
 }
@@ -72,6 +80,37 @@ h1 {
     margin-left: 1em;
     font-size: 0.5em;
   }
+}
+
+.h-nav {
+  @extend %clearfix;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border-bottom: 2px solid $grayBlueColor;
+  > li {
+    float: left;
+    margin-right: 0.5rem;
+
+    > a {
+      display: block;
+      color: $blackGrayColor;
+      text-decoration: none;
+    }
+
+    padding-bottom: 0.5rem;
+    margin-bottom: -2px;
+    border-bottom: 2px solid transparent;
+    &.selected {
+      border-bottom: 2px solid $greenColor;
+    }
+  }
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
 }
 
 .panel-row {
@@ -107,11 +146,7 @@ h1 {
   }
 
   > .placeholder {
-    display: block;
-    text-align: center;
-    margin: 2rem;
-    font-size: 2rem;
-    color: $darkerGrayBlueColor;
+    @extend %placeholder;
   }
 }
 
@@ -273,6 +308,24 @@ input[type="text"], input[type="email"], input[type="password"] {
   flex-basis: 275px;
 }
 
+.github-repo-panel {
+  @extend .panel;
+
+  > section {
+    padding: 0;
+  }
+
+  background-color: transparent;
+  border-radius: 0;
+  color: $blackGrayColor;
+  box-shadow: none;
+
+  min-width: 400px;
+  flex-basis: 400px;
+  flex-grow: 3;
+  position: relative;
+}
+
 %github-repos-anchor {
   color: $blackGrayColor;
   display: block;
@@ -337,6 +390,71 @@ input[type="text"], input[type="email"], input[type="password"] {
       &.selected {
         font-weight: 600;
       }
+    }
+  }
+}
+
+.github-repo {
+  background-color: $whiteColor;
+  border-radius: 4px;
+  color: $blackGrayColor;
+  box-shadow: 0px 1px 2px $grayBlueColor;
+  position: relative;
+
+  > header > h1 {
+    padding: 2rem;
+    margin-top: 0;
+  }
+
+  > header > .h-nav {
+    padding: 0px 2rem;
+  }
+}
+
+.github-pulls {
+  padding-top: 0.5rem;
+  height: 400px;
+  overflow: auto;
+
+  > div > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      padding: 1rem 2rem;
+
+      border-bottom: 1px solid $grayBlueColor;
+      &:last-of-type {
+        border-bottom: 0;
+      }
+
+      &:nth-of-type(2n) {
+        background-color: darken($whiteColor, 1%);
+      }
+    }
+  }
+
+  .placeholder {
+    @extend %placeholder;
+  }
+}
+
+.github-pull {
+  @extend %clearfix;
+  > .avatar {
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin-right: 0.5rem;
+  }
+
+  .timestamp {
+    color: $darkerGrayBlueColor;
+    font-size: 0.75rem;
+    > a {
+      text-decoration: none;
+      color: inherit;
     }
   }
 }

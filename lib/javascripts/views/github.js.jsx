@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 //= require ./github-sources
 //= require ./github-repos
+//= require ./github-repo
 
 (function () {
 
@@ -28,8 +29,15 @@ FlynnDashboard.Views.Github = React.createClass({
 							selectedType={this.props.selectedType} />
 					</section>
 
-					<section className="panel">
-						<span className="placeholder">Select a repo on the left to get started</span>
+					<section className="github-repo-panel">
+						{this.props.selectedRepo ? (
+							<FlynnDashboard.Views.GithubRepo
+								ownerLogin={this.props.selectedRepo.ownerLogin}
+								name={this.props.selectedRepo.name}
+								selectedPanel={this.props.selectedRepoPanel} />
+						) : (
+							<span className="placeholder">Select a repo on the left to get started</span>
+						)}
 					</section>
 				</section>
 			</section>
