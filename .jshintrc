@@ -21,6 +21,7 @@
 		"FlynnDashboard": true,
 		"Marbles": true,
 		"React": true,
-		"Promise": true
+		"Promise": true,
+		"moment": true
 	}
 }
