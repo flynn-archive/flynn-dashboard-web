@@ -92,14 +92,6 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 		GithubCommitsStore.addChangeListener(this.state.commitsStoreId, this.__handleStoreChange);
 	},
 
-	componentDidUpdate: function (prevProps, prevState) {
-		var oldCommitsStoreId = prevState.commitsStoreId;
-		var newCommitsStoreId = this.state.commitsStoreId;
-		if (prevState.commitsPages.length === 1 || !Marbles.Utils.assertEqual(oldCommitsStoreId, newCommitsStoreId)) {
-			this.__scrollToBottom();
-		}
-	},
-
 	componentWillReceiveProps: function (props) {
 		var oldCommitsStoreId = this.state.commitsStoreId;
 		var newCommitsStoreId = getCommitsStoreId(props);
@@ -120,11 +112,6 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 
 	__handlePageEvent: function (pageId, event) {
 		this.refs.scrollPagination.handlePageEvent(pageId, event);
-	},
-
-	__scrollToBottom: function () {
-		var scrollParent = findScrollParent(this.getDOMNode());
-		scrollParent.scrollTop = scrollParent.scrollHeight;
 	}
 });
 
