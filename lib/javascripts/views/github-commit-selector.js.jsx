@@ -92,7 +92,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 	},
 
 	componentDidUpdate: function (prevProps, prevState) {
-		if (prevState.commitsPages.length === 0) {
+		if (prevState.commitsPages.length === 1) {
 			this.__scrollToBottom();
 		}
 	},
