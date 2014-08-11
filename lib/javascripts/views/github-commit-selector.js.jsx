@@ -105,7 +105,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 		var newCommitsStoreId = getCommitsStoreId(props);
 		if ( !Marbles.Utils.assertEqual(oldCommitsStoreId, newCommitsStoreId) ) {
 			GithubCommitsStore.removeChangeListener(oldCommitsStoreId, this.__handleStoreChange);
-			this.__handleStoreChange();
+			this.__handleStoreChange(props);
 			GithubCommitsStore.addChangeListener(newCommitsStoreId, this.__handleStoreChange);
 		}
 	},
@@ -114,8 +114,8 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 		GithubCommitsStore.removeChangeListener(this.state.commitsStoreId, this.__handleStoreChange);
 	},
 
-	__handleStoreChange: function () {
-		this.setState(getState(this.props));
+	__handleStoreChange: function (props) {
+		this.setState(getState(props || this.props));
 	},
 
 	__handlePageEvent: function (pageId, event) {
