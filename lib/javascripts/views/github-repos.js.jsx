@@ -79,7 +79,7 @@ FlynnDashboard.Views.GithubRepos = React.createClass({
 								{page.repos.map(function (repo) {
 									return (
 										<li key={repo.id}>
-											<FlynnDashboard.Views.RouteLink path={getPath([{ repo: repo.name, owner: repo.ownerLogin }])}>
+											<FlynnDashboard.Views.RouteLink path={getPath([{ repo: repo.name, owner: repo.ownerLogin, branch: repo.defaultBranch }])}>
 												<h2>
 													{repo.name} <small>{repo.language}</small>
 												</h2>

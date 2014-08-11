@@ -34,7 +34,8 @@ FlynnDashboard.Views.Github = React.createClass({
 							<FlynnDashboard.Views.GithubRepo
 								ownerLogin={this.props.selectedRepo.ownerLogin}
 								name={this.props.selectedRepo.name}
-								selectedPanel={this.props.selectedRepoPanel} />
+								selectedPanel={this.props.selectedRepoPanel}
+								selectedBranchName={this.props.selectedBranchName} />
 						) : (
 							<span className="placeholder">Select a repo on the left to get started</span>
 						)}

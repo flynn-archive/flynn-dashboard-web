@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
-//= require ../stores/github-pulls
+//= require ../stores/github-repo
 //= require ./github-pulls
+//= require ./github-branch-selector
 //= require ./helpers/getPath
 //= require ./route-link
 
@@ -8,8 +9,27 @@
 
 "use strict";
 
+var GithubRepoStore = FlynnDashboard.Stores.GithubRepo;
+
 var getPath = FlynnDashboard.Views.Helpers.getPath;
 var RouteLink = FlynnDashboard.Views.RouteLink;
+
+function getRepoStoreId (props) {
+	return {
+		ownerLogin: props.ownerLogin,
+		name: props.name
+	};
+}
+
+function getState (props) {
+	var state = {
+		repoStoreId: getRepoStoreId(props)
+	};
+
+	state.repo = GithubRepoStore.getState(state.repoStoreId).repo;
+
+	return state;
+}
 
 FlynnDashboard.Views.GithubRepo = React.createClass({
 	displayName: "Views.GithubRepo",
@@ -19,6 +39,13 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 		if ( !selectedPanel ) {
 			selectedPanel = "commits";
 		}
+
+		var selectedBranchName = this.props.selectedBranchName;
+		var repo = this.state.repo;
+		if ( !selectedBranchName && repo ) {
+			selectedBranchName = repo.defaultBranch;
+		}
+
 		return (
 			<section className="github-repo">
 				<header>
@@ -39,7 +66,14 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 				</header>
 
 				{selectedPanel === "commits" ? (
-					<p>TODO: commits scroll view and branch selector</p>
+					<div>
+						<FlynnDashboard.Views.GithubBranchSelector
+							ownerLogin={this.props.ownerLogin}
+							repoName={this.props.name}
+							selectedBranchName={selectedBranchName}
+							defaultBranchName={repo ? repo.defaultBranch : null}/>
+						<p>TODO: commits scroll view and branch selector</p>
+					</div>
 				) : null}
 
 				{selectedPanel === "pulls" ? (
@@ -47,7 +81,33 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 				) : null}
 			</section>
 		);
-	}
+	},
+
+	getInitialState: function () {
+		return getState(this.props);
+	},
+
+	componentDidMount: function () {
+		GithubRepoStore.addChangeListener(this.state.repoStoreId, this.__handleStoreChange);
+	},
+
+	componentWillReceiveProps: function (props) {
+		var oldRepoStoreId = this.state.repoStoreId;
+		var newRepoStoreId = getRepoStoreId(props);
+		if ( !Marbles.Utils.assertEqual(oldRepoStoreId, newRepoStoreId) ) {
+			GithubRepoStore.removeChangeListener(oldRepoStoreId, this.__handleStoreChange);
+			this.__handleStoreChange();
+			GithubRepoStore.addChangeListener(newRepoStoreId, this.__handleStoreChange);
+		}
+	},
+
+	componentWillUnmount: function () {
+		GithubRepoStore.removeChangeListener(this.state.repoStoreId, this.__handleStoreChange);
+	},
+
+	__handleStoreChange: function () {
+		this.setState(getState(this.props));
+	},
 });
 
 })();
