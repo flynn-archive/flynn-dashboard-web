@@ -19,7 +19,7 @@ var Timestamp = FlynnDashboard.Views.Timestamp;
 function getPullsStoreId (props) {
 	return {
 		ownerLogin: props.ownerLogin,
-		name: props.name
+		repoName: props.repoName
 	};
 }
 
@@ -93,7 +93,7 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 		var newPullsStoreId = getPullsStoreId(props);
 		if ( !Marbles.Utils.assertEqual(oldPullsStoreId, newPullsStoreId) ) {
 			GithubPullsStore.removeChangeListener(oldPullsStoreId, this.__handleStoreChange);
-			this.__handleStoreChange();
+			this.__handleStoreChange(props);
 			GithubPullsStore.addChangeListener(newPullsStoreId, this.__handleStoreChange);
 		}
 	},
@@ -102,8 +102,8 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 		GithubPullsStore.removeChangeListener(this.state.pullsStoreId, this.__handleStoreChange);
 	},
 
-	__handleStoreChange: function () {
-		this.setState(getState(this.props));
+	__handleStoreChange: function (props) {
+		this.setState(getState(props || this.props));
 	},
 
 	__handlePageEvent: function (pageId, event) {
@@ -140,7 +140,7 @@ var PullRequest = React.createClass({
 					</div>
 					<div>
 						<span className="name">
-							{pull.user.name}
+							{pull.user.login}
 						</span>
 						<span className="timestamp">
 							<ExternalLink href={pull.url}>

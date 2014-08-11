@@ -83,7 +83,9 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 				) : null}
 
 				{selectedPanel === "pulls" ? (
-					<FlynnDashboard.Views.GithubPulls ownerLogin={this.props.ownerLogin} name={this.props.name} />
+					<FlynnDashboard.Views.GithubPulls
+						ownerLogin={this.props.ownerLogin}
+						repoName={this.props.name} />
 				) : null}
 			</section>
 		);
