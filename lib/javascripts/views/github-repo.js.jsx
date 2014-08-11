@@ -2,6 +2,7 @@
 //= require ../stores/github-repo
 //= require ./github-pulls
 //= require ./github-branch-selector
+//= require ./github-commit-selector
 //= require ./helpers/getPath
 //= require ./route-link
 
@@ -72,7 +73,11 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 							repoName={this.props.name}
 							selectedBranchName={selectedBranchName}
 							defaultBranchName={repo ? repo.defaultBranch : null}/>
-						<p>TODO: commits scroll view and branch selector</p>
+
+						<FlynnDashboard.Views.GithubCommitSelector
+							ownerLogin={this.props.ownerLogin}
+							repoName={this.props.name}
+							selectedSha={this.props.selectedSha} />
 					</div>
 				) : null}
 

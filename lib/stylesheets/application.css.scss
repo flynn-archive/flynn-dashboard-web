@@ -466,7 +466,7 @@ input[type="text"], input[type="email"], input[type="password"] {
   }
 }
 
-.github-pulls {
+.github-pulls, .github-commits {
   padding-top: 0.5rem;
   height: 400px;
   overflow: auto;
@@ -495,21 +495,33 @@ input[type="text"], input[type="email"], input[type="password"] {
   }
 }
 
-.github-pull {
+.github-pull, .github-commit {
   @extend %clearfix;
   > .avatar {
     float: left;
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
     margin-right: 0.5rem;
+    vertical-align: middle;
   }
 
-  .timestamp {
-    color: $darkerGrayBlueColor;
-    font-size: 0.75rem;
+  .message {
+    font-size: 1rem;
+  }
+
+  .name, .timestamp {
+    font-size: 0.85rem;
+    color: $grayColor;
     > a {
       text-decoration: none;
       color: inherit;
+    }
+  }
+
+  .name + .timestamp {
+    &:before {
+      content: ", ";
     }
   }
 }
