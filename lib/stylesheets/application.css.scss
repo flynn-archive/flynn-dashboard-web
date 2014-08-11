@@ -467,7 +467,6 @@ input[type="text"], input[type="email"], input[type="password"] {
 }
 
 .github-pulls, .github-commits {
-  padding-top: 0.5rem;
   height: 400px;
   overflow: auto;
 
@@ -495,10 +494,15 @@ input[type="text"], input[type="email"], input[type="password"] {
   }
 }
 
+.github-pulls {
+  padding-top: 0.5rem;
+}
+
 .github-pull, .github-commit {
-  @extend %clearfix;
+  display: flex;
+  flex-direction: row;
+
   > .avatar {
-    float: left;
     width: 35px;
     height: 35px;
     border-radius: 50%;
@@ -506,22 +510,26 @@ input[type="text"], input[type="email"], input[type="password"] {
     vertical-align: middle;
   }
 
-  .message {
-    font-size: 1rem;
-  }
+  > .body {
+    flex-grow: 2;
 
-  .name, .timestamp {
-    font-size: 0.85rem;
-    color: $grayColor;
-    > a {
-      text-decoration: none;
-      color: inherit;
+    > .message {
+      font-size: 1rem;
     }
-  }
 
-  .name + .timestamp {
-    &:before {
-      content: ", ";
+    .name, .timestamp {
+      font-size: 0.85rem;
+      color: $grayColor;
+      > a {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+
+    .name + .timestamp {
+      &:before {
+        content: ", ";
+      }
     }
   }
 }
