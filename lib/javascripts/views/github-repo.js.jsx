@@ -77,6 +77,7 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 						<FlynnDashboard.Views.GithubCommitSelector
 							ownerLogin={this.props.ownerLogin}
 							repoName={this.props.name}
+							selectedBranchName={selectedBranchName}
 							selectedSha={this.props.selectedSha} />
 					</div>
 				) : null}

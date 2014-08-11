@@ -22,7 +22,8 @@ var findScrollParent = FlynnDashboard.Views.Helpers.findScrollParent;
 function getCommitsStoreId (props) {
 	return {
 		ownerLogin: props.ownerLogin,
-		repoName: props.repoName
+		repoName: props.repoName,
+		branch: props.selectedBranchName
 	};
 }
 
@@ -92,7 +93,9 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 	},
 
 	componentDidUpdate: function (prevProps, prevState) {
-		if (prevState.commitsPages.length === 1) {
+		var oldCommitsStoreId = prevState.commitsStoreId;
+		var newCommitsStoreId = this.state.commitsStoreId;
+		if (prevState.commitsPages.length === 1 || !Marbles.Utils.assertEqual(oldCommitsStoreId, newCommitsStoreId)) {
 			this.__scrollToBottom();
 		}
 	},
