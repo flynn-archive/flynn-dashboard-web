@@ -97,8 +97,8 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 		var newCommitsStoreId = getCommitsStoreId(props);
 		if ( !Marbles.Utils.assertEqual(oldCommitsStoreId, newCommitsStoreId) ) {
 			GithubCommitsStore.removeChangeListener(oldCommitsStoreId, this.__handleStoreChange);
-			this.__handleStoreChange(props);
 			GithubCommitsStore.addChangeListener(newCommitsStoreId, this.__handleStoreChange);
+			this.__handleStoreChange(props);
 		}
 	},
 

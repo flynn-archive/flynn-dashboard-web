@@ -106,8 +106,8 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 		var newRepoStoreId = getRepoStoreId(props);
 		if ( !Marbles.Utils.assertEqual(oldRepoStoreId, newRepoStoreId) ) {
 			GithubRepoStore.removeChangeListener(oldRepoStoreId, this.__handleStoreChange);
-			this.__handleStoreChange();
 			GithubRepoStore.addChangeListener(newRepoStoreId, this.__handleStoreChange);
+			this.__handleStoreChange(props);
 		}
 	},
 
@@ -115,8 +115,8 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 		GithubRepoStore.removeChangeListener(this.state.repoStoreId, this.__handleStoreChange);
 	},
 
-	__handleStoreChange: function () {
-		this.setState(getState(this.props));
+	__handleStoreChange: function (props) {
+		this.setState(getState(props || this.props));
 	},
 });
 

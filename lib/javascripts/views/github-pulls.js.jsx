@@ -93,8 +93,8 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 		var newPullsStoreId = getPullsStoreId(props);
 		if ( !Marbles.Utils.assertEqual(oldPullsStoreId, newPullsStoreId) ) {
 			GithubPullsStore.removeChangeListener(oldPullsStoreId, this.__handleStoreChange);
-			this.__handleStoreChange(props);
 			GithubPullsStore.addChangeListener(newPullsStoreId, this.__handleStoreChange);
+			this.__handleStoreChange(props);
 		}
 	},
 
