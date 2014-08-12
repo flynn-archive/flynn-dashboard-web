@@ -4,6 +4,7 @@
 //= require ./helpers/findScrollParent
 //= require ./external-link
 //= require ./timestamp
+//= require ./github-commit
 //= require ScrollPagination
 
 (function () {
@@ -72,7 +73,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 								{page.commits.map(function (commit) {
 									return (
 										<li key={commit.sha}>
-											<Commit commit={commit} />
+											<Commit commit={commit} commitsStoreId={this.state.commitsStoreId} />
 										</li>
 									);
 								}, this)}
@@ -119,38 +120,18 @@ var Commit = React.createClass({
 	displayName: "Views.GithubCommitSelector",
 
 	render: function () {
-		var commit = this.props.commit;
-
-		var authorAvatarURL = commit.author.avatarURL;
-		var authorAvatarURLParams;
-		var authorAvatarURLParts;
-		if (authorAvatarURL) {
-			authorAvatarURLParts = authorAvatarURL.split("?");
-			authorAvatarURLParams = Marbles.QueryParams.deserializeParams(authorAvatarURLParts[1] || "");
-			authorAvatarURLParams = Marbles.QueryParams.replaceParams(authorAvatarURLParams, {
-				size: 50
-			});
-			authorAvatarURL = authorAvatarURLParts[0] + Marbles.QueryParams.serializeParams(authorAvatarURLParams);
-		}
-
 		return (
-			<article className="github-commit">
-				<img className="avatar" src={authorAvatarURL} />
-				<div className="body">
-					<div className="message">{commit.message.split("\n")[0]}</div>
-					<div>
-						<span className="name">
-							{commit.author.name}
-						</span>
-						<span className="timestamp">
-							<ExternalLink href={commit.githubURL}>
-								<Timestamp timestamp={commit.createdAt} />
-							</ExternalLink>
-						</span>
-					</div>
+			<FlynnDashboard.Views.GithubCommit commit={this.props.commit}>
+				<div className="launch-btn-container">
+					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
 				</div>
-			</article>
+			</FlynnDashboard.Views.GithubCommit>
 		);
+	},
+
+	__handleLaunchBtnClick: function (e) {
+		e.preventDefault();
+		GithubCommitsActions.launchCommit(this.props.commitsStoreId, this.props.commit.sha);
 	}
 });
 

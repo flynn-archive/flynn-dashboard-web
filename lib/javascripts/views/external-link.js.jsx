@@ -5,7 +5,7 @@
 "use strict";
 
 FlynnDashboard.Views.ExternalLink = React.createClass({
-	displayName: "FlynnDashboard.Views.ExternalLink",
+	displayName: "Views.ExternalLink",
 
 	handleClick: function (e) {
 		if (e.ctrlKey || e.metaKey || e.shiftKey) {

@@ -4,7 +4,7 @@
 "use strict";
 
 FlynnDashboard.Views.Timestamp = React.createClass({
-	displayName: "FlynnDashboard.Views.Timestamp",
+	displayName: "Views.Timestamp",
 
 	getInitialState: function () {
 		return {

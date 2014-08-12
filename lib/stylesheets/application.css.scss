@@ -1,6 +1,7 @@
 @import "normalize";
 @import "sourcesanspro";
 @import "mixins";
+@import "Modal";
 
 * {
 	box-sizing: border-box;
@@ -80,6 +81,31 @@ h1 {
   small {
     margin-left: 1em;
     font-size: 0.5em;
+  }
+}
+
+label {
+  > .name {
+    &:after {
+      content: ":";
+    }
+
+    & + input[type=text] {
+      width: 100%;
+      line-height: 1.5em;
+      height: 2.8em;
+      padding: 0.4em 0.8em;
+    }
+
+    & + input[type=checkbox] {
+      margin-left: 0.5rem;
+    }
+  }
+
+  &:after {
+    display: block;
+    margin-bottom: 1rem;
+    content: " ";
   }
 }
 
@@ -475,6 +501,14 @@ input[type="text"], input[type="email"], input[type="password"] {
     margin: 0;
     padding: 0;
 
+    &:first-of-type {
+      > li:first-of-type {
+        .launch-btn-container {
+          visibility: visible;
+        }
+      }
+    }
+
     > li {
       padding: 1rem 2rem;
 
@@ -485,6 +519,15 @@ input[type="text"], input[type="email"], input[type="password"] {
 
       &:nth-of-type(2n) {
         background-color: darken($whiteColor, 1%);
+      }
+
+      .launch-btn-container {
+        visibility: hidden;
+      }
+      &:hover {
+        .launch-btn-container {
+          visibility: visible;
+        }
       }
     }
   }
@@ -499,20 +542,33 @@ input[type="text"], input[type="email"], input[type="password"] {
 }
 
 .github-pull, .github-commit {
+  -webkit-display: flex;
   display: flex;
+  -webkit-flex-direction: row;
   flex-direction: row;
 
   > .avatar {
     width: 35px;
     height: 35px;
+    min-width: 35px;
     border-radius: 50%;
     margin-right: 0.5rem;
     vertical-align: middle;
   }
 
-  > .body {
+  .launch-btn-container {
+    @extend %clearfix;
+    min-width: 72px;
+    -webkit-flex-grow: 2;
     flex-grow: 2;
+    > .launch-btn {
+      @extend .btn-green;
+      margin-left: 1rem;
+      float: right;
+    }
+  }
 
+  > .body {
     > .message {
       font-size: 1rem;
     }
@@ -531,5 +587,42 @@ input[type="text"], input[type="email"], input[type="password"] {
         content: ", ";
       }
     }
+  }
+}
+
+.github-deploy {
+  font-size: 1.0667rem;
+
+  .github-commit {
+    margin-bottom: 1rem;
+  }
+
+  .launch-btn {
+    @extend .btn-green;
+    margin-top: 1rem;
+    width: 100%;
+    font-size: 1.7rem;
+    font-weight: 600;
+    padding: 1.15em 1em;
+  }
+}
+
+.edit-env {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+
+  > li {
+    margin-bottom: 0.25em;
+  }
+
+  input[type="text"] {
+    width: 347px;
+    line-height: 1.5em;
+  }
+
+  .name {
+    text-align: right;
   }
 }
