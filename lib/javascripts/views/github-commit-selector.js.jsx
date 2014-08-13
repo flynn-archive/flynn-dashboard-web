@@ -117,7 +117,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 });
 
 var Commit = React.createClass({
-	displayName: "Views.GithubCommitSelector",
+	displayName: "Views.GithubCommitSelector Commit",
 
 	render: function () {
 		return (

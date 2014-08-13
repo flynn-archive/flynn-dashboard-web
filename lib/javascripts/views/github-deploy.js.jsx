@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 //= require ../stores/github-commit
+//= require ../stores/github-pull
 //= require ./github-commit
+//= require ./github-pull
 //= require ./edit-env
 //= require Modal
 
@@ -9,6 +11,7 @@
 "use strict";
 
 var GithubCommitStore = FlynnDashboard.Stores.GithubCommit;
+var GithubPullStore = FlynnDashboard.Stores.GithubPull;
 
 var Modal = window.Modal;
 
@@ -20,14 +23,26 @@ function getCommitStoreId (props) {
 	};
 }
 
-function getState (props) {
-	var state = {
-		commitStoreId: getCommitStoreId(props)
+function getPullStoreId (props) {
+	return {
+		ownerLogin: props.baseOwner,
+		repoName: props.baseRepo,
+		number: props.pullNumber
 	};
+}
 
-	state.commit = GithubCommitStore.getState(state.commitStoreId).commit;
+function getState (props) {
+	var state = {};
 
-	state.launchDisabled = !state.commit;
+	if (props.pullNumber) {
+		state.pullStoreId = getPullStoreId(props);
+		state.pull = GithubPullStore.getState(state.pullStoreId).pull;
+	} else {
+		state.commitStoreId = getCommitStoreId(props);
+		state.commit = GithubCommitStore.getState(state.commitStoreId).commit;
+	}
+
+	state.launchDisabled = !state.commit && !state.pull;
 
 	return state;
 }
@@ -37,6 +52,7 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 
 	render: function () {
 		var commit = this.state.commit;
+		var pull = this.state.pull;
 		return (
 			<Modal visible={true} onHide={this.props.onHide} className="github-deploy">
 				<header>
@@ -46,7 +62,9 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 					</h2>
 					{commit ? (
 						<FlynnDashboard.Views.GithubCommit commit={commit} />
-					) : null}
+					) : (pull ? (
+						<FlynnDashboard.Views.GithubPull pull={pull} />
+					) : null)}
 				</header>
 
 				<label>
@@ -75,21 +93,42 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 	},
 
 	componentDidMount: function () {
-		GithubCommitStore.addChangeListener(this.state.commitStoreId, this.__handleStoreChange);
+		if (this.state.commitStoreId) {
+			GithubCommitStore.addChangeListener(this.state.commitStoreId, this.__handleStoreChange);
+		}
+		if (this.state.pullStoreId) {
+			GithubPullStore.addChangeListener(this.state.pullStoreId, this.__handleStoreChange);
+		}
 	},
 
 	componentWillReceiveProps: function (props) {
-		var prevCommitStoreId = this.state.commitStoreId;
-		var nextCommitStoreId = getCommitStoreId(props);
-		if ( !Marbles.Utils.assertEqual(prevCommitStoreId, nextCommitStoreId) ) {
-			GithubCommitStore.removeChangeListener(prevCommitStoreId, this.__handleStoreChange);
-			GithubCommitStore.addChangeListener(nextCommitStoreId, this.__handleStoreChange);
-			this.__handleStoreChange(props);
+		if (this.state.commitStoreId) {
+			var prevCommitStoreId = this.state.commitStoreId;
+			var nextCommitStoreId = getCommitStoreId(props);
+			if ( !Marbles.Utils.assertEqual(prevCommitStoreId, nextCommitStoreId) ) {
+				GithubCommitStore.removeChangeListener(prevCommitStoreId, this.__handleStoreChange);
+				GithubCommitStore.addChangeListener(nextCommitStoreId, this.__handleStoreChange);
+				this.__handleStoreChange(props);
+			}
+		}
+		if (this.state.pullStoreId) {
+			var prevPullStoreId = this.state.pullStoreId;
+			var nextPullStoreId = getPullStoreId(props);
+			if ( !Marbles.Utils.assertEqual(prevPullStoreId, nextPullStoreId) ) {
+				GithubPullStore.removeChangeListener(prevPullStoreId, this.__handleStoreChange);
+				GithubPullStore.addChangeListener(nextPullStoreId, this.__handleStoreChange);
+				this.__handleStoreChange(props);
+			}
 		}
 	},
 
 	componentWillUnmount: function () {
-		GithubCommitStore.removeChangeListener(this.state.commitStoreId, this.__handleStoreChange);
+		if (this.state.commitStoreId) {
+			GithubCommitStore.removeChangeListener(this.state.commitStoreId, this.__handleStoreChange);
+		}
+		if (this.state.pullStoreId) {
+			GithubPullStore.removeChangeListener(this.state.pullStoreId, this.__handleStoreChange);
+		}
 	},
 
 	__handleStoreChange: function (props) {
