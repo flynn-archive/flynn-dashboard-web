@@ -68,7 +68,7 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 								{page.pulls.map(function (pull) {
 									return (
 										<li key={pull.id}>
-											<PullRequest pull={pull} />
+											<PullRequest pull={pull} pullsStoreId={this.state.pullsStoreId} />
 										</li>
 									);
 								}, this)}
@@ -154,8 +154,16 @@ var PullRequest = React.createClass({
 						</span>
 					</div>
 				</div>
+				<div className="launch-btn-container">
+					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
+				</div>
 			</article>
 		);
+	},
+
+	__handleLaunchBtnClick: function (e) {
+		e.preventDefault();
+		GithubPullsActions.launchPull(this.props.pullsStoreId, this.props.pull);
 	}
 });
 

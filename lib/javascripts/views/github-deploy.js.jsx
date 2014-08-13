@@ -111,7 +111,6 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 	},
 
 	__handleEnvChange: function (env) {
-		console.log(env);
 		this.setState({
 			env: env
 		});
