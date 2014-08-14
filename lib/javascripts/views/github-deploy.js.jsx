@@ -1,19 +1,36 @@
 /** @jsx React.DOM */
 //= require ../stores/github-commit
 //= require ../stores/github-pull
+//= require ../stores/app
+//= require ../stores/job-output
+//= require ../actions/github-deploy
 //= require ./github-commit
 //= require ./github-pull
 //= require ./edit-env
+//= require ./command-output
+//= require ./route-link
 //= require Modal
 
 (function () {
 
 "use strict";
 
+var GithubRepoStore = FlynnDashboard.Stores.GithubRepo;
 var GithubCommitStore = FlynnDashboard.Stores.GithubCommit;
 var GithubPullStore = FlynnDashboard.Stores.GithubPull;
+var JobOutputStore = FlynnDashboard.Stores.JobOutput;
 
+var GithubDeployActions = FlynnDashboard.Actions.GithubDeploy;
+
+var RouteLink = FlynnDashboard.Views.RouteLink;
 var Modal = window.Modal;
+
+function getRepoStoreId (props) {
+	return {
+		ownerLogin: props.ownerLogin,
+		name: props.repoName
+	};
+}
 
 function getCommitStoreId (props) {
 	return {
@@ -31,8 +48,21 @@ function getPullStoreId (props) {
 	};
 }
 
-function getState (props) {
-	var state = {};
+function getJobOutputStoreId (props) {
+	if ( !props.job ) {
+		return null;
+	}
+	return {
+		appId: props.appId,
+		jobId: props.job.id
+	};
+}
+
+function getState (props, prevState) {
+	prevState = prevState || {};
+	var state = {
+		launching: prevState.launching
+	};
 
 	if (props.pullNumber) {
 		state.pullStoreId = getPullStoreId(props);
@@ -42,7 +72,27 @@ function getState (props) {
 		state.commit = GithubCommitStore.getState(state.commitStoreId).commit;
 	}
 
-	state.launchDisabled = !state.commit && !state.pull;
+	state.repoStoreId = getRepoStoreId(props);
+	state.repo = GithubRepoStore.getState(state.repoStoreId).repo;
+
+	var jobOutputState;
+	if (props.job) {
+		state.jobOutputStoreId = getJobOutputStoreId(props);
+		jobOutputState = JobOutputStore.getState(state.jobOutputStoreId);
+		state.jobOutput = jobOutputState.output;
+		state.jobError = jobOutputState.streamError;
+
+		if (jobOutputState.open === false) {
+			state.launching = false;
+		}
+	}
+
+	state.launchDisabled = !!(!state.repo || !(state.commit || state.pull) || state.launching);
+
+	if (props.errorMsg) {
+		state.launchDisabled = false;
+		state.launching = false;
+	}
 
 	return state;
 }
@@ -79,7 +129,23 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 
 				<FlynnDashboard.Views.EditEnv env={this.state.env} onChange={this.__handleEnvChange} />
 
-				<button className="launch-btn" disabled={this.state.launchDisabled} onClick={this.__handleLaunchBtnClick}>Launch app</button>
+				{this.state.jobOutput ? (
+					<FlynnDashboard.Views.CommandOutput outputStreamData={this.state.jobOutput} />
+				) : null}
+
+				{this.props.errorMsg ? (
+					<div className="alert-error">{this.props.errorMsg}</div>
+				) : null}
+
+				{this.state.jobError ? (
+					<div className="alert-error">{this.state.jobError}</div>
+				) : null}
+
+				{this.props.appId && !this.state.launching ? (
+					<RouteLink className="launch-btn" path={"/apps/"+ encodeURIComponent(this.props.appId)}>Continue</RouteLink>
+				) : (
+					<button className="launch-btn" disabled={this.state.launchDisabled} onClick={this.__handleLaunchBtnClick}>{this.state.launching ? "Launching..." : "Launch app"}</button>
+				)}
 			</Modal>
 		);
 	},
@@ -93,46 +159,87 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 	},
 
 	componentDidMount: function () {
+		GithubRepoStore.addChangeListener(this.state.repoStoreId, this.__handleStoreChange);
 		if (this.state.commitStoreId) {
 			GithubCommitStore.addChangeListener(this.state.commitStoreId, this.__handleStoreChange);
 		}
 		if (this.state.pullStoreId) {
 			GithubPullStore.addChangeListener(this.state.pullStoreId, this.__handleStoreChange);
 		}
+		if (this.state.jobOutputStoreId) {
+			JobOutputStore.addChangeListener(this.state.jobOutputStoreId, this.__handleStoreChange);
+		}
 	},
 
 	componentWillReceiveProps: function (props) {
+		if (props.env) {
+			this.setState({
+				env: props.env
+			});
+		}
+
+		var didChange = false;
+
+		var prevRepoStoreId = this.state.repoStoreId;
+		var nextRepoStoreId = getRepoStoreId(props);
+		if ( !Marbles.Utils.assertEqual(prevRepoStoreId, nextRepoStoreId) ) {
+			GithubRepoStore.addChangeListener(prevRepoStoreId, this.__handleStoreChange);
+			GithubRepoStore.removeChangeListener(nextRepoStoreId, this.__handleStoreChange);
+			didChange = true;
+		}
+
 		if (this.state.commitStoreId) {
 			var prevCommitStoreId = this.state.commitStoreId;
 			var nextCommitStoreId = getCommitStoreId(props);
 			if ( !Marbles.Utils.assertEqual(prevCommitStoreId, nextCommitStoreId) ) {
 				GithubCommitStore.removeChangeListener(prevCommitStoreId, this.__handleStoreChange);
 				GithubCommitStore.addChangeListener(nextCommitStoreId, this.__handleStoreChange);
-				this.__handleStoreChange(props);
+				didChange = true;
 			}
 		}
+
 		if (this.state.pullStoreId) {
 			var prevPullStoreId = this.state.pullStoreId;
 			var nextPullStoreId = getPullStoreId(props);
 			if ( !Marbles.Utils.assertEqual(prevPullStoreId, nextPullStoreId) ) {
 				GithubPullStore.removeChangeListener(prevPullStoreId, this.__handleStoreChange);
 				GithubPullStore.addChangeListener(nextPullStoreId, this.__handleStoreChange);
-				this.__handleStoreChange(props);
+				didChange = true;
 			}
+		}
+
+		var prevJobOutputStoreId = this.state.jobOutputStoreId;
+		var nextJobOutputStoreId = getJobOutputStoreId(props);
+		if ( !Marbles.Utils.assertEqual(prevJobOutputStoreId, nextJobOutputStoreId) ) {
+			if (prevJobOutputStoreId) {
+				JobOutputStore.removeChangeListener(prevJobOutputStoreId, this.__handleStoreChange);
+			}
+			if (nextJobOutputStoreId) {
+				JobOutputStore.addChangeListener(nextJobOutputStoreId, this.__handleStoreChange);
+			}
+			didChange = true;
+		}
+
+		if (didChange) {
+			this.__handleStoreChange(props);
 		}
 	},
 
 	componentWillUnmount: function () {
+		GithubRepoStore.removeChangeListener(this.state.repoStoreId, this.__handleStoreChange);
 		if (this.state.commitStoreId) {
 			GithubCommitStore.removeChangeListener(this.state.commitStoreId, this.__handleStoreChange);
 		}
 		if (this.state.pullStoreId) {
 			GithubPullStore.removeChangeListener(this.state.pullStoreId, this.__handleStoreChange);
 		}
+		if (this.state.jobOutputStoreId) {
+			JobOutputStore.removeChangeListener(this.state.jobOutputStoreId, this.__handleStoreChange);
+		}
 	},
 
 	__handleStoreChange: function (props) {
-		this.setState(getState(props || this.props));
+		this.setState(getState(props || this.props, this.state));
 	},
 
 	__handleNameChange: function (e) {
@@ -157,6 +264,20 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 
 	__handleLaunchBtnClick: function (e) {
 		e.preventDefault();
+		var appData = {
+			name: this.state.name,
+			dbRequested: this.state.db,
+			env: this.state.env
+		};
+		this.setState({
+			launching: true,
+			launchDisabled: true
+		});
+		if (this.state.pull) {
+			GithubDeployActions.launchFromPull(this.state.repo, this.state.pull, appData);
+		} else {
+			GithubDeployActions.launchFromCommit(this.state.repo, this.props.branchName, this.state.commit, appData);
+		}
 	},
 
 	__formatName: function (name) {

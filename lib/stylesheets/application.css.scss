@@ -57,6 +57,13 @@ html, body {
   color: $darkerGrayBlueColor;
 }
 
+%alert {
+  padding: 0.25em 0.75em;
+  border: 0.1em solid darken($almostWhiteColor, 6%);
+  border-radius: 0.25em;
+  font-weight: 400;
+}
+
 .float-right {
   float: right;
 }
@@ -245,6 +252,13 @@ label {
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+.alert-error {
+  @extend %alert;
+  color: darken($redColor, 6%);
+  border-color: lighten($redColor, 30%);
+  background-color: lighten($redColor, 40%);
 }
 
 label > .text {
@@ -604,6 +618,11 @@ input[type="text"], input[type="email"], input[type="password"] {
     font-size: 1.7rem;
     font-weight: 600;
     padding: 1.15em 1em;
+    text-align: center;
+  }
+
+  .alert-error {
+    margin-top: 1rem;
   }
 }
 
@@ -627,4 +646,11 @@ input[type="text"], input[type="email"], input[type="password"] {
   .name {
     text-align: right;
   }
+}
+
+.command-output {
+  background-color: $blackGrayColor;
+  color: $whiteColor;
+  border-radius: 4px;
+  padding: 1em;
 }
