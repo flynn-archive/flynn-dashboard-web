@@ -79,7 +79,7 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 
 				<FlynnDashboard.Views.EditEnv env={this.state.env} onChange={this.__handleEnvChange} />
 
-				<button className="launch-btn" disabled={this.state.launchDisabled}>Launch app</button>
+				<button className="launch-btn" disabled={this.state.launchDisabled} onClick={this.__handleLaunchBtnClick}>Launch app</button>
 			</Modal>
 		);
 	},
@@ -153,6 +153,10 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 		this.setState({
 			env: env
 		});
+	},
+
+	__handleLaunchBtnClick: function (e) {
+		e.preventDefault();
 	},
 
 	__formatName: function (name) {
