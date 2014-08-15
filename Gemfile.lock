@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/flynn/flynn-dashboard-web-icons.git
+  revision: 8840d0cd8980d372181056f7dba98f6d8719d0f7
+  specs:
+    flynn-dashboard-web-icons (0.0.1)
+
+GIT
   remote: git://github.com/jvaill/sprockets.git
   revision: 6327a13e77609991509c8cf3d3c1e571f6a4b23d
   branch: master
@@ -84,6 +90,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  flynn-dashboard-web-icons!
   marbles-js!
   mimetype-fu
   puma
