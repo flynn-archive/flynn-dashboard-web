@@ -85,6 +85,11 @@ html, body {
   }
 }
 
+%btn-red {
+  @extend %btn-green;
+  background-color: $redColor;
+}
+
 %btn-block {
   margin-top: 1rem;
   width: 100%;
@@ -781,6 +786,13 @@ input[type="text"], input[type="email"], input[type="password"] {
 .app-env {
   .save-btn {
     @extend %btn-green;
+    @extend %btn-block;
+  }
+}
+
+.app-delete {
+  .delete-btn {
+    @extend %btn-red;
     @extend %btn-block;
   }
 }

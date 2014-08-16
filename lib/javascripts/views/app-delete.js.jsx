@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 //= require ../stores/app
-//= require ./app-processes
-//= require ./route-link
+//= require ../actions/app-delete
+//= require Modal
 
 (function () {
 
@@ -9,7 +9,9 @@
 
 var AppStore = FlynnDashboard.Stores.App;
 
-var RouteLink = FlynnDashboard.Views.RouteLink;
+var AppDeleteActions = FlynnDashboard.Actions.AppDelete;
+
+var Modal = window.Modal;
 
 function getAppStoreId (props) {
 	return {
@@ -17,49 +19,34 @@ function getAppStoreId (props) {
 	};
 }
 
-function getState (props) {
+function getState (props, prevState) {
+	prevState = prevState || {};
 	var state = {
-		appStoreId: getAppStoreId(props)
+		appStoreId: getAppStoreId(props),
+		env: prevState.env
 	};
 
 	var appState = AppStore.getState(state.appStoreId);
 	state.app = appState.app;
-	state.formation = appState.formation;
 
 	return state;
 }
 
-FlynnDashboard.Views.AppControls = React.createClass({
-	displayName: "Views.AppControls",
+FlynnDashboard.Views.AppDelete = React.createClass({
+	displayName: "Views.AppDelete",
 
 	render: function () {
 		var app = this.state.app;
-		var formation = this.state.formation;
-		var getAppPath = this.props.getAppPath;
-
-		if ( !app ) {
-			return <section />;
-		}
-
 		return (
-			<section className="app-controls">
-				<header>
-					<h1>
-						{app.name}
-						<RouteLink path={getAppPath("/delete")}>
-							<i className="icn-trash" />
-						</RouteLink>
-					</h1>
-				</header>
+			<Modal onShow={function(){}} onHide={this.props.onHide} visible={true}>
+				<section className="app-delete">
+					<header>
+						<h1>Delete {app ? app.name : "app"}?</h1>
+					</header>
 
-				<RouteLink path={getAppPath("/env")} className="btn-green">
-					App environment
-				</RouteLink>
-
-				{formation ? (
-					<FlynnDashboard.Views.AppProcesses formation={formation} />
-				) : null}
-			</section>
+					<button className="delete-btn" disabled={ !app || this.state.isDeleting } onClick={this.__handleDeleteBtnClick}>{this.state.isDeleting ? "Please wait..." : "Delete"}</button>
+				</section>
+			</Modal>
 		);
 	},
 
@@ -86,7 +73,15 @@ FlynnDashboard.Views.AppControls = React.createClass({
 	},
 
 	__handleStoreChange: function (props) {
-		this.setState(getState(props || this.props));
+		this.setState(getState(props || this.props, this.state));
+	},
+
+	__handleDeleteBtnClick: function (e) {
+		e.preventDefault();
+		this.setState({
+			isDeleting: true
+		});
+		AppDeleteActions.deleteApp(this.props.appId);
 	}
 });
 
