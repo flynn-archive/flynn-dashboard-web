@@ -49,6 +49,10 @@ FlynnDashboard.Views.AppControls = React.createClass({
 					</h1>
 				</header>
 
+				<RouteLink path={getAppPath("/env")} className="btn-green">
+					App environment
+				</RouteLink>
+
 				{formation ? (
 					<FlynnDashboard.Views.AppProcesses formation={formation} />
 				) : null}

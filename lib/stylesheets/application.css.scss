@@ -65,6 +65,35 @@ html, body {
   font-weight: 400;
 }
 
+%btn-green {
+  display: inline-block;
+  position: relative;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1em;
+  padding: 0.75em 1em;
+  text-decoration: none;
+  background-color: $greenColor;
+  color: $almostWhiteColor;
+  border: 0;
+
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+%btn-block {
+  margin-top: 1rem;
+  width: 100%;
+  font-size: 1.7rem;
+  font-weight: 600;
+  padding: 1.15em 1em;
+  text-align: center;
+}
+
 .float-right {
   float: right;
 }
@@ -293,23 +322,7 @@ label {
 }
 
 .btn-green {
-  display: inline-block;
-  position: relative;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 400;
-  line-height: 1em;
-  padding: 0.75em 1em;
-  text-decoration: none;
-  background-color: $greenColor;
-  color: $almostWhiteColor;
-  border: 0;
-
-  &[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  @extend %btn-green;
 }
 
 .alert-error {
@@ -670,13 +683,8 @@ input[type="text"], input[type="email"], input[type="password"] {
   }
 
   .launch-btn {
-    @extend .btn-green;
-    margin-top: 1rem;
-    width: 100%;
-    font-size: 1.7rem;
-    font-weight: 600;
-    padding: 1.15em 1em;
-    text-align: center;
+    @extend %btn-green;
+    @extend %btn-block;
   }
 
   .alert-error {
@@ -767,5 +775,12 @@ input[type="text"], input[type="email"], input[type="password"] {
         }
       }
     }
+  }
+}
+
+.app-env {
+  .save-btn {
+    @extend %btn-green;
+    @extend %btn-block;
   }
 }
