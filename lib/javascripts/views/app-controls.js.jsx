@@ -58,7 +58,15 @@ FlynnDashboard.Views.AppControls = React.createClass({
 
 				{formation ? (
 					<FlynnDashboard.Views.AppProcesses formation={formation} />
-				) : null}
+				) : (
+					<section className="app-processes">
+						&nbsp;
+					</section>
+				)}
+
+				<RouteLink path={getAppPath("/logs")} className="logs-btn">
+					Show logs
+				</RouteLink>
 			</section>
 		);
 	},
