@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 //= require ../stores/app
 //= require ./app-processes
+//= require ./app-routes
 //= require ./route-link
 
 (function () {
@@ -52,21 +53,31 @@ FlynnDashboard.Views.AppControls = React.createClass({
 					</h1>
 				</header>
 
-				<RouteLink path={getAppPath("/env")} className="btn-green">
-					App environment
-				</RouteLink>
+				<section className="flex-row">
+					<section className="col">
+						<RouteLink path={getAppPath("/env")} className="btn-green">
+							App environment
+						</RouteLink>
 
-				{formation ? (
-					<FlynnDashboard.Views.AppProcesses formation={formation} />
-				) : (
-					<section className="app-processes">
-						&nbsp;
+						{formation ? (
+							<FlynnDashboard.Views.AppProcesses formation={formation} />
+						) : (
+							<section className="app-processes">
+								&nbsp;
+							</section>
+						)}
+
+						<RouteLink path={getAppPath("/logs")} className="logs-btn">
+							Show logs
+						</RouteLink>
 					</section>
-				)}
 
-				<RouteLink path={getAppPath("/logs")} className="logs-btn">
-					Show logs
-				</RouteLink>
+					<section className="col">
+						<FlynnDashboard.Views.AppRoutes
+							appId={this.props.appId}
+							getAppPath={this.props.getAppPath} />
+					</section>
+				</section>
 			</section>
 		);
 	},

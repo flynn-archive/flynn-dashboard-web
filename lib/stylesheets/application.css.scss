@@ -289,6 +289,22 @@ label {
   height: 50px;
 }
 
+.flex-row {
+  display: -webkit-flex;
+  display: flex;
+  -webit-flex-direction: row;
+  flex-direction: row;
+
+  > .col {
+    flex-grow: 1;
+    margin-right: 2rem;
+    flex-basis: 50%;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+
 .panel-row {
   display: -webkit-flex;
   display: flex;
@@ -335,6 +351,13 @@ label {
   color: darken($redColor, 6%);
   border-color: lighten($redColor, 30%);
   background-color: lighten($redColor, 40%);
+}
+
+.alert-info {
+  @extend %alert;
+  color: darken($blueColor, 6%);
+  border-color: lighten($blueColor, 30%);
+  background-color: lighten($blueColor, 40%);
 }
 
 label > .text {
@@ -809,6 +832,17 @@ input[type="text"], input[type="email"], input[type="password"] {
   }
 }
 
+.app-route-new {
+  .alert-info, .alert-error {
+    margin: 1rem 0;
+  }
+
+  .create-btn {
+    @extend %btn-green;
+    @extend %btn-block;
+  }
+}
+
 .app-logs {
   > .processes {
     list-style: none;
@@ -857,6 +891,50 @@ input[type="text"], input[type="email"], input[type="password"] {
       text-align: center;
       color: $darkerGrayBlueColor;
       font-size: 1.5rem;
+    }
+  }
+}
+
+.app-routes {
+  > header {
+    margin: 0;
+
+    > h2 {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .icn-trash {
+    margin-left: 0.5rem;
+    cursor: pointer;
+  }
+
+  .add-route-btn {
+    @extend %btn-green;
+    margin-top: 1rem;
+  }
+
+  > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0.5rem;
+
+    > li {
+      line-height: 1.5em;
+      color: $darkerGrayBlueColor;
+
+      > a {
+        color: inherit;
+      }
+
+      .icn-trash {
+        visibility: hidden;
+      }
+
+      &:hover .icn-trash {
+        visibility: visible;
+      }
     }
   }
 }
