@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 //= require ../stores/app
 //= require ./app-processes
+//= require ./app-resources
 //= require ./app-routes
 //= require ./route-link
 
@@ -73,6 +74,9 @@ FlynnDashboard.Views.AppControls = React.createClass({
 					</section>
 
 					<section className="col">
+						<FlynnDashboard.Views.AppResources
+							appId={this.props.appId} />
+
 						<FlynnDashboard.Views.AppRoutes
 							appId={this.props.appId}
 							getAppPath={this.props.getAppPath} />
