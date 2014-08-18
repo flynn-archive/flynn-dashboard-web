@@ -15,6 +15,9 @@ FlynnDashboard.Views.GithubCommit = React.createClass({
 	render: function () {
 		var commit = this.props.commit;
 
+		var selectable = this.props.selectable;
+		var selected = this.props.selected;
+
 		var authorAvatarURL = commit.author.avatarURL;
 		var authorAvatarURLParams;
 		var authorAvatarURLParts;
@@ -29,25 +32,40 @@ FlynnDashboard.Views.GithubCommit = React.createClass({
 
 		return (
 			<article className="github-commit">
-				<img className="avatar" src={authorAvatarURL} />
-				<div className="body">
-					<div className="message">
-						{commit.message.split("\n")[0]}
+				<label className={selectable ? "pretty-radio" : "inner"}>
+					{selectable ? (
+						<input type="radio" name="selected-sha" checked={selected} onChange={this.__handleChange} />
+					) : null}
+					{selectable ? (
+						<div className={"dot"} />
+					) : null}
+
+					<img className="avatar" src={authorAvatarURL} />
+					<div className="body">
+						<div className="message">
+							{commit.message.split("\n")[0]}
+						</div>
+						<div>
+							<span className="name">
+								{commit.author.name}
+							</span>
+							<span className="timestamp">
+								<ExternalLink href={commit.githubURL}>
+									<Timestamp timestamp={commit.createdAt} />
+								</ExternalLink>
+							</span>
+						</div>
 					</div>
-					<div>
-						<span className="name">
-							{commit.author.name}
-						</span>
-						<span className="timestamp">
-							<ExternalLink href={commit.githubURL}>
-								<Timestamp timestamp={commit.createdAt} />
-							</ExternalLink>
-						</span>
-					</div>
-				</div>
-				{this.props.children}
+					{this.props.children}
+				</label>
 			</article>
 		);
+	},
+
+	__handleChange: function (e) {
+		if (e.target.checked) {
+			this.props.onSelect(this.props.commit);
+		}
 	}
 });
 

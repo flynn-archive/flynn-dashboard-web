@@ -15,10 +15,6 @@ var GithubCommitsStore = FlynnDashboard.Stores.GithubCommits;
 var GithubCommitsActions = FlynnDashboard.Actions.GithubCommits;
 
 var ScrollPagination = window.ScrollPagination;
-var ExternalLink = FlynnDashboard.Views.ExternalLink;
-var Timestamp = FlynnDashboard.Views.Timestamp;
-
-var findScrollParent = FlynnDashboard.Views.Helpers.findScrollParent;
 
 function getCommitsStoreId (props) {
 	return {
@@ -47,6 +43,11 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 
 	render: function () {
 		var handlePageEvent = this.__handlePageEvent;
+		var Commit = this.props.commitComponent || FlynnDashboard.Views.GithubCommit;
+
+		var deployedSha = this.props.deployedSha;
+		var selectedSha = this.props.selectedSha;
+		var selectableCommits = !!this.props.selectableCommits;
 
 		return (
 			<section className="github-commits">
@@ -72,8 +73,13 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 
 								{page.commits.map(function (commit) {
 									return (
-										<li key={commit.sha}>
-											<Commit commit={commit} commitsStoreId={this.state.commitsStoreId} />
+										<li key={commit.sha} className={commit.sha === deployedSha ? "deployed" : ""}>
+											<Commit
+												commit={commit}
+												selectable={selectableCommits}
+												selected={commit.sha === selectedSha}
+												commitsStoreId={this.state.commitsStoreId}
+												onSelect={this.__handleCommitSelected} />
 										</li>
 									);
 								}, this)}
@@ -113,25 +119,10 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 
 	__handlePageEvent: function (pageId, event) {
 		this.refs.scrollPagination.handlePageEvent(pageId, event);
-	}
-});
-
-var Commit = React.createClass({
-	displayName: "Views.GithubCommitSelector Commit",
-
-	render: function () {
-		return (
-			<FlynnDashboard.Views.GithubCommit commit={this.props.commit}>
-				<div className="launch-btn-container">
-					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
-				</div>
-			</FlynnDashboard.Views.GithubCommit>
-		);
 	},
 
-	__handleLaunchBtnClick: function (e) {
-		e.preventDefault();
-		GithubCommitsActions.launchCommit(this.props.commitsStoreId, this.props.commit.sha);
+	__handleCommitSelected: function (commit) {
+		GithubCommitsActions.commitSelected(this.state.commitsStoreId, commit.sha);
 	}
 });
 

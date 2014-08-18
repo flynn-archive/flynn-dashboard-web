@@ -180,6 +180,10 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 
 		var didChange = false;
 
+		if (props.errorMsg) {
+			didChange = true;
+		}
+
 		var prevRepoStoreId = this.state.repoStoreId;
 		var nextRepoStoreId = getRepoStoreId(props);
 		if ( !Marbles.Utils.assertEqual(prevRepoStoreId, nextRepoStoreId) ) {

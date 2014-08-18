@@ -1,8 +1,10 @@
 /** @jsx React.DOM */
 //= require ../stores/github-repo
+//= require ../actions/github-commits
 //= require ./github-pulls
 //= require ./github-branch-selector
 //= require ./github-commit-selector
+//= require ./github-commit
 //= require ./helpers/getPath
 //= require ./route-link
 
@@ -11,6 +13,8 @@
 "use strict";
 
 var GithubRepoStore = FlynnDashboard.Stores.GithubRepo;
+
+var GithubCommitsActions = FlynnDashboard.Actions.GithubCommits;
 
 var getPath = FlynnDashboard.Views.Helpers.getPath;
 var RouteLink = FlynnDashboard.Views.RouteLink;
@@ -79,7 +83,8 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 								ownerLogin={this.props.ownerLogin}
 								repoName={this.props.name}
 								selectedBranchName={selectedBranchName}
-								selectedSha={this.props.selectedSha} />
+								selectedSha={this.props.selectedSha}
+								commitComponent={Commit} />
 						) : null}
 					</div>
 				) : null}
@@ -118,6 +123,25 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 	__handleStoreChange: function (props) {
 		this.setState(getState(props || this.props));
 	},
+});
+
+var Commit = React.createClass({
+	displayName: "Views.GithubCommitSelector Commit",
+
+	render: function () {
+		return (
+			<FlynnDashboard.Views.GithubCommit commit={this.props.commit}>
+				<div className="launch-btn-container">
+					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
+				</div>
+			</FlynnDashboard.Views.GithubCommit>
+		);
+	},
+
+	__handleLaunchBtnClick: function (e) {
+		e.preventDefault();
+		GithubCommitsActions.launchCommit(this.props.commitsStoreId, this.props.commit.sha);
+	}
 });
 
 })();
