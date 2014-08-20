@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-//= require ./services-list
+//= require ./apps-list
 //= require ./route-link
 
 (function () {
@@ -13,7 +13,7 @@ FlynnDashboard.Views.Main = React.createClass({
 		return (
 			<section className="panel">
 				<section>
-					<FlynnDashboard.Views.ServicesList />
+					<FlynnDashboard.Views.AppsList />
 				</section>
 
 				<section className="clearfix">
