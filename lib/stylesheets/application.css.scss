@@ -111,6 +111,21 @@ html, body {
   margin-left: 1rem;
 }
 
+.back-link {
+  text-decoration: none;
+  color: $darkerGrayBlueColor;
+
+  &:before {
+    content: "« ";
+  }
+
+  &:after {
+    display: block;
+    content: " ";
+    margin-bottom: 1rem;
+  }
+}
+
 h1 {
   color: $blackGrayColor;
   font-weight: 400;

@@ -3,12 +3,15 @@
 //= require ./app-controls
 //= require ./app-source-history
 //= require ./service-unavailable
+//= require ./route-link
 
 (function () {
 
 "use strict";
 
 var AppStore = FlynnDashboard.Stores.App;
+
+var RouteLink = FlynnDashboard.Views.RouteLink;
 
 function getAppStoreId (props) {
 	return {
@@ -37,6 +40,10 @@ FlynnDashboard.Views.App = React.createClass({
 
 		return (
 			<section>
+				<RouteLink path="/" className="back-link">
+					Go back to cluster
+				</RouteLink>
+
 				{ !app && this.state.serviceUnavailable ? (
 					<FlynnDashboard.Views.ServiceUnavailable status={503} />
 				) : null }

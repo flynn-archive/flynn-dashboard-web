@@ -2,10 +2,13 @@
 //= require ./github-sources
 //= require ./github-repos
 //= require ./github-repo
+//= require ./route-link
 
 (function () {
 
 "use strict";
+
+var RouteLink = FlynnDashboard.Views.RouteLink;
 
 FlynnDashboard.Views.Github = React.createClass({
 	displayName: "Views.Github",
@@ -15,6 +18,9 @@ FlynnDashboard.Views.Github = React.createClass({
 			<section>
 				<header className="page-header">
 					<h1>GitHub repos</h1>
+					<RouteLink path="/" className="back-link">
+						Go back to cluster
+					</RouteLink>
 				</header>
 
 				<section className="panel">
