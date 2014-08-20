@@ -1181,3 +1181,10 @@ input[type="text"], input[type="email"], input[type="password"] {
     display: inline-block;
   }
 }
+
+.connect-with-github {
+  > .icn-github-mark {
+    font-size: 1em;
+    margin-right: 0.5em;
+  }
+}

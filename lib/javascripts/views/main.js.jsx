@@ -20,7 +20,14 @@ FlynnDashboard.Views.Main = React.createClass({
 					<FlynnDashboard.Views.RouteLink
 						className="btn-green float-right"
 						path="/github">
-							Add Services
+							{this.props.githubAuthed ? (
+								"Add Services"
+							) : (
+								<span className="connect-with-github">
+									<i className="icn-github-mark" />
+									Connect with Github
+								</span>
+							)}
 					</FlynnDashboard.Views.RouteLink>
 				</section>
 			</section>
