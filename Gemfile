@@ -11,4 +11,4 @@ gem 'sprockets', '~> 2.0', :git => 'git://github.com/jvaill/sprockets.git', :bra
 gem 'react-jsx-sprockets', :git => 'git://github.com/jvatic/react-jsx-sprockets.git', :branch => 'master'
 gem 'marbles-js', :git => 'git://github.com/jvatic/marbles-js.git', :branch => 'master'
 
-gem "flynn-dashboard-web-icons", :git => "git://github.com/flynn/flynn-dashboard-web-icons.git"
+gem "flynn-dashboard-web-icons", :git => "git://github.com/flynn/flynn-dashboard-web-icons.git", :branch => "master"
