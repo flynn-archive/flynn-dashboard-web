@@ -2,6 +2,7 @@
 //= require ../stores/app
 //= require ./app-controls
 //= require ./app-source-history
+//= require ./service-unavailable
 
 (function () {
 
@@ -21,6 +22,7 @@ function getState (props) {
 	};
 
 	var appState = AppStore.getState(state.appStoreId);
+	state.serviceUnavailable = appState.serviceUnavailable;
 	state.app = appState.app;
 	state.formation = appState.formation;
 
@@ -35,6 +37,10 @@ FlynnDashboard.Views.App = React.createClass({
 
 		return (
 			<section>
+				{ !app && this.state.serviceUnavailable ? (
+					<FlynnDashboard.Views.ServiceUnavailable status={503} />
+				) : null }
+
 				{app ? (
 					<section className="panel">
 						<FlynnDashboard.Views.AppControls
