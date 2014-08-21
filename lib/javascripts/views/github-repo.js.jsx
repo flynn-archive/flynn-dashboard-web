@@ -130,7 +130,7 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 });
 
 var Commit = React.createClass({
-	displayName: "Views.GithubCommitSelector Commit",
+	displayName: "Views.GithubRepo Commit",
 
 	render: function () {
 		return (
@@ -149,7 +149,7 @@ var Commit = React.createClass({
 });
 
 var PullRequest = React.createClass({
-	displayName: "Views.GithubPulls PullRequest",
+	displayName: "Views.GithubRepo PullRequest",
 
 	render: function () {
 		return (
