@@ -65,6 +65,7 @@ FlynnDashboard.Views.App = React.createClass({
 							app={app}
 							selectedBranchName={this.props.selectedBranchName}
 							selectedSha={this.props.selectedSha}
+							selectedTab={this.props.selectedTab}
 							getAppPath={this.props.getAppPath} />
 					</section>
 				) : null}

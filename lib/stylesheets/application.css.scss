@@ -892,6 +892,10 @@ input[type="text"], input[type="email"], input[type="password"] {
       margin-bottom: 1rem;
       font-weight: 600;
     }
+
+    > nav {
+      margin-bottom: 1rem;
+    }
   }
 
   .pretty-select {

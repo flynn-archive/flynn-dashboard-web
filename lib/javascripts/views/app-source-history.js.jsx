@@ -2,6 +2,9 @@
 //= require ../stores/github-repo
 //= require ../actions/app-source-history
 //= require ./github-branch-selector
+//= require ./github-commit-selector
+//= require ./github-pulls
+//= require ./route-link
 
 (function () {
 
@@ -10,6 +13,8 @@
 var GithubRepoStore = FlynnDashboard.Stores.GithubRepo;
 
 var AppSourceHistoryActions = FlynnDashboard.Actions.AppSourceHistory;
+
+var RouteLink = FlynnDashboard.Views.RouteLink;
 
 function getRepoStoreId (props) {
 	var meta = props.app.meta;
@@ -33,6 +38,8 @@ FlynnDashboard.Views.AppSourceHistory = React.createClass({
 	displayName: "Views.AppSourceHistory",
 
 	render: function () {
+		var getAppPath = this.props.getAppPath;
+
 		var app = this.props.app;
 		var meta = app.meta;
 		var repo = this.state.repo;
@@ -47,29 +54,59 @@ FlynnDashboard.Views.AppSourceHistory = React.createClass({
 			deployBtnDisabled = false;
 		}
 
+		var selectedTab = this.props.selectedTab || "commits";
+
 		return (
 			<div className="app-source-history">
 				<header>
 					<h2>Source history</h2>
+
+					<nav>
+						<ul className="h-nav">
+							<li className={selectedTab === "commits" ? "selected" : null}>
+								<RouteLink path={getAppPath("", { shtab: null })}>
+									Commits
+								</RouteLink>
+							</li>
+
+							<li className={selectedTab === "pulls" ? "selected" : null}>
+								<RouteLink path={getAppPath("", { shtab: "pulls" })}>
+									Pull requests
+								</RouteLink>
+							</li>
+						</ul>
+					</nav>
 				</header>
 
-				<FlynnDashboard.Views.GithubBranchSelector
-					ownerLogin={ownerLogin}
-					repoName={repoName}
-					selectedBranchName={selectedBranchName}
-					defaultBranchName={repo ? repo.defaultBranch : null}/>
+				{selectedTab === "commits" ? (
+					<FlynnDashboard.Views.GithubBranchSelector
+						ownerLogin={ownerLogin}
+						repoName={repoName}
+						selectedBranchName={selectedBranchName}
+						defaultBranchName={repo ? repo.defaultBranch : null}/>
+				) : null}
 
-				<FlynnDashboard.Views.GithubCommitSelector
-					ownerLogin={ownerLogin}
-					repoName={repoName}
-					selectedBranchName={selectedBranchName}
-					selectableCommits={true}
-					selectedSha={selectedSha}
-					deployedSha={meta.sha} />
+				{selectedTab === "commits" ? (
+					<FlynnDashboard.Views.GithubCommitSelector
+						ownerLogin={ownerLogin}
+						repoName={repoName}
+						selectedBranchName={selectedBranchName}
+						selectableCommits={true}
+						selectedSha={selectedSha}
+						deployedSha={meta.sha} />
+				) : null}
 
-				<div className="deploy-btn-container">
-					<button className="btn-green" disabled={deployBtnDisabled} onClick={this.__handleDeployBtnClick}>Deploy</button>
-				</div>
+				{selectedTab === "commits" ? (
+					<div className="deploy-btn-container">
+						<button className="btn-green" disabled={deployBtnDisabled} onClick={this.__handleDeployBtnClick}>Deploy</button>
+					</div>
+				) : null}
+
+				{selectedTab === "pulls" ? (
+					<FlynnDashboard.Views.GithubPulls
+						ownerLogin={ownerLogin}
+						repoName={repoName} />
+				) : null}
 			</div>
 		);
 	},

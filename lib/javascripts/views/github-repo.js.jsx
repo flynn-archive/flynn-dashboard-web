@@ -1,10 +1,12 @@
 /** @jsx React.DOM */
 //= require ../stores/github-repo
 //= require ../actions/github-commits
+//= require ../actions/github-pulls
 //= require ./github-pulls
 //= require ./github-branch-selector
 //= require ./github-commit-selector
 //= require ./github-commit
+//= require ./github-pull
 //= require ./helpers/getPath
 //= require ./route-link
 
@@ -15,6 +17,7 @@
 var GithubRepoStore = FlynnDashboard.Stores.GithubRepo;
 
 var GithubCommitsActions = FlynnDashboard.Actions.GithubCommits;
+var GithubPullsActions = FlynnDashboard.Actions.GithubPulls;
 
 var getPath = FlynnDashboard.Views.Helpers.getPath;
 var RouteLink = FlynnDashboard.Views.RouteLink;
@@ -92,7 +95,8 @@ FlynnDashboard.Views.GithubRepo = React.createClass({
 				{selectedPanel === "pulls" ? (
 					<FlynnDashboard.Views.GithubPulls
 						ownerLogin={this.props.ownerLogin}
-						repoName={this.props.name} />
+						repoName={this.props.name}
+						pullRequestComponent={PullRequest}/>
 				) : null}
 			</section>
 		);
@@ -141,6 +145,25 @@ var Commit = React.createClass({
 	__handleLaunchBtnClick: function (e) {
 		e.preventDefault();
 		GithubCommitsActions.launchCommit(this.props.commitsStoreId, this.props.commit.sha);
+	}
+});
+
+var PullRequest = React.createClass({
+	displayName: "Views.GithubPulls PullRequest",
+
+	render: function () {
+		return (
+			<FlynnDashboard.Views.GithubPull pull={this.props.pull}>
+				<div className="launch-btn-container">
+					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
+				</div>
+			</FlynnDashboard.Views.GithubPull>
+		);
+	},
+
+	__handleLaunchBtnClick: function (e) {
+		e.preventDefault();
+		GithubPullsActions.launchPull(this.props.pullsStoreId, this.props.pull);
 	}
 });
 

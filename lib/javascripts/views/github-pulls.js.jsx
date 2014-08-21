@@ -38,6 +38,7 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 	displayName: "Views.GithubPulls",
 
 	render: function () {
+		var PullRequest = this.props.pullRequestComponent || FlynnDashboard.Views.GithubPull;
 		var handlePageEvent = this.__handlePageEvent;
 
 		return (
@@ -105,25 +106,6 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 
 	__handlePageEvent: function (pageId, event) {
 		this.refs.scrollPagination.handlePageEvent(pageId, event);
-	}
-});
-
-var PullRequest = React.createClass({
-	displayName: "Views.GithubPulls PullRequest",
-
-	render: function () {
-		return (
-			<FlynnDashboard.Views.GithubPull pull={this.props.pull}>
-				<div className="launch-btn-container">
-					<button className="launch-btn" onClick={this.__handleLaunchBtnClick}>Launch</button>
-				</div>
-			</FlynnDashboard.Views.GithubPull>
-		);
-	},
-
-	__handleLaunchBtnClick: function (e) {
-		e.preventDefault();
-		GithubPullsActions.launchPull(this.props.pullsStoreId, this.props.pull);
 	}
 });
 
