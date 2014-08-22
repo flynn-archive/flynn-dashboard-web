@@ -39,6 +39,7 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 
 	render: function () {
 		var PullRequest = this.props.pullRequestComponent || FlynnDashboard.Views.GithubPull;
+		var pullRequestProps = this.props.pullRequestProps || {};
 		var handlePageEvent = this.__handlePageEvent;
 
 		return (
@@ -66,7 +67,10 @@ FlynnDashboard.Views.GithubPulls = React.createClass({
 								{page.pulls.map(function (pull) {
 									return (
 										<li key={pull.id}>
-											<PullRequest pull={pull} pullsStoreId={this.state.pullsStoreId} />
+											{PullRequest(Marbles.Utils.extend({
+												pull: pull,
+												pullStoreId: this.state.pullsStoreId
+											}, pullRequestProps))}
 										</li>
 									);
 								}, this)}

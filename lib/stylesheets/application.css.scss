@@ -690,7 +690,7 @@ input[type="text"], input[type="email"], input[type="password"] {
 
     &:first-of-type {
       > li:first-of-type {
-        .launch-btn-container {
+        .launch-btn-container, .merge-btn-container {
           visibility: visible;
         }
       }
@@ -708,11 +708,11 @@ input[type="text"], input[type="email"], input[type="password"] {
         background-color: darken($whiteColor, 1%);
       }
 
-      .launch-btn-container {
+      .launch-btn-container, .merge-btn-container {
         visibility: hidden;
       }
       &:hover {
-        .launch-btn-container {
+        .launch-btn-container, .merge-btn-container {
           visibility: visible;
         }
       }
@@ -753,12 +753,12 @@ input[type="text"], input[type="email"], input[type="password"] {
     vertical-align: middle;
   }
 
-  .launch-btn-container {
+  .launch-btn-container, .merge-btn-container {
     @extend %clearfix;
     min-width: 72px;
     -webkit-flex-grow: 2;
     flex-grow: 2;
-    > .launch-btn {
+    > .launch-btn, > .merge-btn {
       @extend .btn-green;
       margin-left: 1rem;
       float: right;
@@ -905,6 +905,11 @@ input[type="text"], input[type="email"], input[type="password"] {
 
   .deploy-btn-container {
     padding: 1rem 2rem;
+  }
+
+  .merge-confirm-btn {
+    @extend %btn-green;
+    @extend %btn-block;
   }
 }
 
