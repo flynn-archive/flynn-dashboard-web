@@ -48,13 +48,12 @@ FlynnDashboard.Views.RouteLink = React.createClass({
 	},
 
 	render: function () {
-		return (
-			<a
-				className={this.props.className}
-				title={this.props.title}
-				href={this.state.href}
-				onClick={this.handleClick}>{this.props.children}</a>
-		);
+		var props = Marbles.Utils.extend({}, this.props);
+		props.href = this.state.href;
+		props.onClick = this.handleClick;
+		delete props.children;
+		delete props.path;
+		return React.DOM.a(props, this.props.children);
 	},
 });
 

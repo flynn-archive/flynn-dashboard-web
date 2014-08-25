@@ -16,9 +16,10 @@ FlynnDashboard.Views.ExternalLink = React.createClass({
 	},
 
 	render: function () {
-		return (
-			<a href={this.props.href} onClick={this.handleClick} title={this.props.title}>{this.props.children}</a>
-		);
+		var props = Marbles.Utils.extend({}, this.props);
+		props.onClick = this.handleClick;
+		delete props.children;
+		return React.DOM.a(props, this.props.children);
 	}
 });
 
