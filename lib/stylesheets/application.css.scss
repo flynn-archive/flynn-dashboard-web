@@ -99,6 +99,14 @@ html, body {
   text-align: center;
 }
 
+code {
+  background-color: $almostWhiteColor;
+  color: $blackColor;
+  border: 1px solid $grayBlueColor;
+  border-radius: 4px;
+  padding: 0.25em;
+}
+
 .float-right {
   float: right;
 }
@@ -1195,5 +1203,13 @@ input[type="text"], input[type="email"], input[type="password"] {
   > .icn-github-mark {
     font-size: 1em;
     margin-right: 0.5em;
+  }
+}
+
+.github-auth {
+  padding: 2rem 1rem;
+
+  > ol {
+    line-height: 3em;
   }
 }
