@@ -65,7 +65,7 @@ html, body {
   font-weight: 400;
 }
 
-%btn-green {
+%btn {
   display: inline-block;
   position: relative;
   border-radius: 4px;
@@ -75,14 +75,20 @@ html, body {
   line-height: 1em;
   padding: 0.75em 1em;
   text-decoration: none;
-  background-color: $greenColor;
-  color: $almostWhiteColor;
+  background-color: $almostWhiteColor;
+  color: $blackColor;
   border: 0;
 
   &[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+%btn-green {
+  @extend %btn;
+  background-color: $greenColor;
+  color: $almostWhiteColor;
 }
 
 %btn-red {
@@ -1212,4 +1218,9 @@ input[type="text"], input[type="email"], input[type="password"] {
   > ol {
     line-height: 3em;
   }
+}
+
+.logout-btn {
+  @extend %btn;
+  float: left;
 }

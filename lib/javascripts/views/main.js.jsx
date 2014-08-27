@@ -1,10 +1,13 @@
 /** @jsx React.DOM */
 //= require ./apps-list
 //= require ./route-link
+//= require ../actions/main
 
 (function () {
 
 "use strict";
+
+var MainActions = FlynnDashboard.Actions.Main;
 
 FlynnDashboard.Views.Main = React.createClass({
 	displayName: "Views.Main",
@@ -17,6 +20,7 @@ FlynnDashboard.Views.Main = React.createClass({
 				</section>
 
 				<section className="clearfix">
+					<button className="logout-btn" onClick={MainActions.handleLoginBtnClick}>Log out</button>
 					<FlynnDashboard.Views.RouteLink
 						className="btn-green float-right"
 						path="/github">
