@@ -14,6 +14,7 @@ FlynnDashboard.Views.Login = React.createClass({
 
 	componentDidMount: function () {
 		LoginModel.addChangeListener(this.__handleLoginModelChange);
+		this.refs.token.getDOMNode().focus();
 	},
 
 	componentWillUnmount: function () {
@@ -28,9 +29,7 @@ FlynnDashboard.Views.Login = React.createClass({
 				</header>
 
 				<form className="login-form" noValidate={true} onSubmit={this.__handleSubmit}>
-					<Input ref="email" type="email" name="email" label="Email" valueLink={LoginModel.getValueLink("email")} />
-
-					<Input ref="passphrase" type="password" name="passphrase" label="Passphrase" valueLink={LoginModel.getValueLink("passphrase")} />
+					<Input ref="token" type="password" name="token" label="Login token" valueLink={LoginModel.getValueLink("token")} />
 
 					<button type="submit" disabled={this.__isSubmitDisabled()}>Login</button>
 				</form>
@@ -48,8 +47,7 @@ FlynnDashboard.Views.Login = React.createClass({
 
 	__handleSubmit: function (e) {
 		e.preventDefault();
-		this.refs.email.setChanging(false);
-		this.refs.passphrase.setChanging(false);
+		this.refs.token.setChanging(false);
 		LoginModel.performLogin().then(this.props.onSuccess, function(){});
 	}
 });
