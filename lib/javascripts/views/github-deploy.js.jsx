@@ -87,6 +87,7 @@ function getState (props, prevState) {
 		}
 	}
 
+	state.launchComplete = props.appId && !state.launching && !state.jobError && !props.errorMsg;
 	state.launchDisabled = !!(!state.repo || !(state.commit || state.pull) || state.launching);
 
 	if (props.errorMsg) {
@@ -141,7 +142,7 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 					<div className="alert-error">{this.state.jobError}</div>
 				) : null}
 
-				{this.props.appId && !this.state.launching ? (
+				{this.state.launchComplete ? (
 					<RouteLink className="launch-btn" path={"/apps/"+ encodeURIComponent(this.props.appId)}>Continue</RouteLink>
 				) : (
 					<button className="launch-btn" disabled={this.state.launchDisabled} onClick={this.__handleLaunchBtnClick}>{this.state.launching ? "Launching..." : "Launch app"}</button>
@@ -273,6 +274,9 @@ FlynnDashboard.Views.GithubDeploy = React.createClass({
 			dbRequested: this.state.db,
 			env: this.state.env
 		};
+		if (this.props.errorMsg) {
+			this.props.dismissError();
+		}
 		this.setState({
 			launching: true,
 			launchDisabled: true
