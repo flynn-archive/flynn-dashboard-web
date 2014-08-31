@@ -103,7 +103,8 @@ FlynnDashboard.Views.AppSourceHistory = React.createClass({
 						ownerLogin={ownerLogin}
 						repoName={repoName}
 						selectedBranchName={selectedBranchName}
-						defaultBranchName={repo ? repo.defaultBranch : null}/>
+						defaultBranchName={repo ? repo.defaultBranch : null}
+						deployedBranchName={meta.ref} />
 				) : null}
 
 				{selectedTab === "commits" ? (

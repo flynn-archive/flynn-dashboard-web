@@ -41,15 +41,17 @@ FlynnDashboard.Views.GithubBranchSelector = React.createClass({
 			}
 		}
 		var selectedBranchName = this.props.selectedBranchName;
+		var deployedBranchName = this.props.deployedBranchName;
+		var formatBranchName = this.__formatBranchName.bind(this, deployedBranchName);
 		return (
 			<div className="pretty-select">
 				<select ref="branchSelector" value={selectedBranchName} onChange={this.__handleBranchChange}>
 					{selectedBranchName && branchNames.indexOf(selectedBranchName) === -1 ? (
-							<option value={selectedBranchName}>{selectedBranchName}</option>
+							<option value={selectedBranchName}>{formatBranchName(selectedBranchName)}</option>
 					) : null}
 					{branchNames.map(function (branch) {
 						return (
-							<option key={branch} value={branch}>{branch}</option>
+							<option key={branch} value={branch}>{formatBranchName(branch)}</option>
 						);
 					}.bind(this))}
 				</select>
@@ -86,6 +88,13 @@ FlynnDashboard.Views.GithubBranchSelector = React.createClass({
 	__handleBranchChange: function () {
 		var selectedBranchName = this.refs.branchSelector.getDOMNode().value;
 		GithubBranchesActions.branchSelected(this.state.branchesStoreId, selectedBranchName);
+	},
+
+	__formatBranchName: function (deployedBranchName, branchName) {
+		if (branchName === deployedBranchName) {
+			return "*"+ branchName;
+		}
+		return branchName;
 	}
 });
 
