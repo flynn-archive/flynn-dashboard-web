@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 //= require ./external-link
 //= require ./timestamp
+//= require ./helpers/findScrollParent
 
 (function () {
 
@@ -8,9 +9,21 @@
 
 var ExternalLink = FlynnDashboard.Views.ExternalLink;
 var Timestamp = FlynnDashboard.Views.Timestamp;
+var findScrollParent = FlynnDashboard.Views.Helpers.findScrollParent;
 
 FlynnDashboard.Views.GithubCommit = React.createClass({
 	displayName: "Views.GithubCommit",
+
+	scrollIntoView: function () {
+		var el = this.getDOMNode();
+		var scrollParent = findScrollParent(el);
+		var offsetTop = el.offsetTop;
+		var offsetHeight = el.offsetHeight;
+		var scrollParentStyle = window.getComputedStyle(scrollParent);
+		var scrollParentHeight = parseInt(scrollParentStyle.height, 10);
+		var scrollTop = offsetTop - ((scrollParentHeight - offsetHeight) / 2);
+		scrollParent.scrollTop = scrollTop;
+	},
 
 	render: function () {
 		var commit = this.props.commit;

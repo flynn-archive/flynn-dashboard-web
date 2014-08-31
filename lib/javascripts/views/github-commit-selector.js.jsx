@@ -17,14 +17,19 @@ var GithubCommitsActions = FlynnDashboard.Actions.GithubCommits;
 var ScrollPagination = window.ScrollPagination;
 
 function getCommitsStoreId (props) {
-	return {
+	var id = {
 		ownerLogin: props.ownerLogin,
 		repoName: props.repoName,
 		branch: props.selectedBranchName
 	};
+	if (props.deployedSha && props.deployedBranchName === props.selectedBranchName) {
+		id.refSha = props.deployedSha;
+	}
+	return id;
 }
 
-function getState (props) {
+function getState (props, prevState) {
+	prevState = prevState || {};
 	var state = {
 		commitsStoreId: getCommitsStoreId(props)
 	};
@@ -34,6 +39,16 @@ function getState (props) {
 	state.commitsPages = commitsState.pages;
 	state.commitsHasPrevPage = !!commitsState.prevPageParams;
 	state.commitsHasNextPage = !!commitsState.nextPageParams;
+
+	var hasDeployedCommit = false;
+	for (var i = 0, ref = state.commitsPages, len = ref.length; i < len; i++) {
+		if (ref[i].hasRefSha) {
+			hasDeployedCommit = true;
+			break;
+		}
+	}
+	state.hasDeployedCommit = hasDeployedCommit || prevState.hasDeployedCommit;
+	state.shouldScrollToDeployedCommit = state.hasDeployedCommit && !prevState.hasDeployedCommit;
 
 	return state;
 }
@@ -75,6 +90,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 									return (
 										<li key={commit.sha} className={commit.sha === deployedSha ? "deployed" : ""}>
 											<Commit
+												ref={commit.sha}
 												commit={commit}
 												selectable={selectableCommits}
 												selected={commit.sha === selectedSha}
@@ -99,6 +115,15 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 		GithubCommitsStore.addChangeListener(this.state.commitsStoreId, this.__handleStoreChange);
 	},
 
+	componentDidUpdate: function () {
+		if (this.state.shouldScrollToDeployedCommit) {
+			var component = this.refs[this.props.deployedSha];
+			if (component && component.isMounted()) {
+				component.scrollIntoView();
+			}
+		}
+	},
+
 	componentWillReceiveProps: function (props) {
 		var oldCommitsStoreId = this.state.commitsStoreId;
 		var newCommitsStoreId = getCommitsStoreId(props);
@@ -114,7 +139,7 @@ FlynnDashboard.Views.GithubCommitSelector = React.createClass({
 	},
 
 	__handleStoreChange: function (props) {
-		this.setState(getState(props || this.props));
+		this.setState(getState(props || this.props, this.state));
 	},
 
 	__handlePageEvent: function (pageId, event) {

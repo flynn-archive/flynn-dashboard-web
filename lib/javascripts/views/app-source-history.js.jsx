@@ -113,7 +113,8 @@ FlynnDashboard.Views.AppSourceHistory = React.createClass({
 						selectedBranchName={selectedBranchName}
 						selectableCommits={true}
 						selectedSha={selectedSha}
-						deployedSha={meta.sha} />
+						deployedSha={meta.sha}
+						deployedBranchName={meta.ref} />
 				) : null}
 
 				{selectedTab === "commits" ? (

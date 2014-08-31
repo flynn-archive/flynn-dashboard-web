@@ -696,6 +696,7 @@ input[type="text"], input[type="email"], input[type="password"] {
 .github-pulls, .github-commits {
   height: 400px;
   overflow: auto;
+  position: relative;
 
   > div > ul {
     list-style: none;
